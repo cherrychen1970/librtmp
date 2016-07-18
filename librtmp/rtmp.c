@@ -928,9 +928,6 @@ RTMP_Connect0(RTMP *r, struct sockaddr * service)
 	  return FALSE;
 	}
 
-    // @remark debug info by http://github.com/ossrs/srs
-    _srs_state = 1;
-
       if (r->Link.socksport)
 	{
 	  RTMP_Log(RTMP_LOGDEBUG, "%s ... SOCKS negotiation", __FUNCTION__);
@@ -961,6 +958,9 @@ RTMP_Connect0(RTMP *r, struct sockaddr * service)
   }
 
   setsockopt(r->m_sb.sb_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &on, sizeof(on));
+
+    // @remark debug info by http://github.com/ossrs/srs
+    _srs_state = 1;
 
   return TRUE;
 }
@@ -3909,11 +3909,6 @@ RTMP_SendChunk(RTMP *r, RTMPChunk *chunk)
 int
 RTMP_SendPacket(RTMP *r, RTMPPacket *packet, int queue)
 {
-    // @remark debug info by http://github.com/ossrs/srs
-    if (packet->m_packetType == 8 || packet->m_packetType == 9) {
-        _srs_state = 2;
-    }
-    
   const RTMPPacket *prevPacket;
   uint32_t last = 0;
   int nSize;
@@ -3923,6 +3918,12 @@ RTMP_SendPacket(RTMP *r, RTMPPacket *packet, int queue)
   char *buffer, *tbuf = NULL, *toff = NULL;
   int nChunkSize;
   int tlen;
+  
+    // @remark debug info by http://github.com/ossrs/srs
+    if (packet->m_packetType == 8 || packet->m_packetType == 9) {
+        _srs_state = 2;
+    }
+    
 
   if (packet->m_nChannel >= r->m_channelsAllocatedOut)
     {
