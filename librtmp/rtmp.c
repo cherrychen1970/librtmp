@@ -1660,6 +1660,9 @@ WriteN(RTMP *r, const char *buffer, int n)
       RC4_encrypt2(r->Link.rc4keyOut, n, buffer, ptr);
     }
 #endif
+  
+    // @remark debug info by http://github.com/ossrs/srs
+    _srs_sbytes += n;
 
   while (n > 0)
     {
