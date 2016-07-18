@@ -371,6 +371,17 @@ extern "C"
   int RTMP_HashSWF(const char *url, unsigned int *size, unsigned char *hash,
 		   int age);
 
+/* 
+ ***********************************************************************
+ * Introduced by SRS, other useful data.
+ ***********************************************************************
+ */
+/*
+ * The current state of client.
+ *  0,idle 1,connected 2,working 3,closed
+ */
+extern int _srs_state;
+
 #ifdef __cplusplus
 };
 #endif
