@@ -1520,6 +1520,10 @@ extern FILE *netstackdump;
 extern FILE *netstackdump_read;
 #endif
 
+// @remark debug info by http://github.com/ossrs/srs
+unsigned long _srs_rbytes = 0;
+unsigned long _srs_sbytes = 0;
+
 static int
 ReadN(RTMP *r, char *buffer, int n)
 {
@@ -1532,6 +1536,9 @@ ReadN(RTMP *r, char *buffer, int n)
 #ifdef _DEBUG
   memset(buffer, 0, n);
 #endif
+  
+    // @remark debug info by http://github.com/ossrs/srs
+    _srs_rbytes += n;
 
   ptr = buffer;
   while (n > 0)
@@ -1639,6 +1646,9 @@ WriteN(RTMP *r, const char *buffer, int n)
 #ifdef CRYPTO
   char *encrypted = 0;
   char buf[RTMP_BUFFER_CACHE_SIZE];
+  
+    // @remark debug info by http://github.com/ossrs/srs
+    _srs_sbytes += n;
 
   if (r->Link.rc4keyOut)
     {

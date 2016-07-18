@@ -396,6 +396,21 @@ extern int _srs_pid;
  * is a virtual connection which merge many http connections.
  */
 extern int _srs_cid;
+/* 
+ ***********************************************************************
+ * Introduced by SRS, other useful data.
+ ***********************************************************************
+ */
+/*
+ * The received bytes from server. user can use to stat the kbps by:
+ *      rkbps = rbytes * 8 / 1000 / (diff seconds)
+ */
+extern unsigned long _srs_rbytes;
+/*
+ * The sent bytes from server. user can use to stat the kbps by:
+ *      skbps = sbytes * 8 / 1000 / (diff seconds)
+ */
+extern unsigned long _srs_sbytes;
     
 #ifdef __cplusplus
 };
