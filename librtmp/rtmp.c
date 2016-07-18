@@ -325,6 +325,9 @@ RTMP_Free(RTMP *r)
   free(r);
 }
 
+// @remark debug info by http://github.com/ossrs/srs
+int _srs_state = -1;
+
 void
 RTMP_Init(RTMP *r)
 {
@@ -345,6 +348,9 @@ RTMP_Init(RTMP *r)
   r->m_fVideoCodecs = 252.0;
   r->Link.timeout = 30;
   r->Link.swfAge = 30;
+
+  // @remark debug info by http://github.com/ossrs/srs
+  _srs_state = 0;
 }
 
 void
@@ -952,6 +958,9 @@ RTMP_Connect0(RTMP *r, struct sockaddr * service)
   }
 
   setsockopt(r->m_sb.sb_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &on, sizeof(on));
+
+    // @remark debug info by http://github.com/ossrs/srs
+    _srs_state = 1;
 
   return TRUE;
 }
@@ -3883,6 +3892,11 @@ RTMP_ReadPacket(RTMP *r, RTMPPacket *packet)
       packet->m_body = NULL;	/* so it won't be erased on free */
     }
 
+    // @remark debug info by http://github.com/ossrs/srs
+    if (packet->m_packetType == 8 || packet->m_packetType == 9) {
+        _srs_state = 2;
+    }
+
   return TRUE;
 }
 
@@ -4051,6 +4065,12 @@ RTMP_SendPacket(RTMP *r, RTMPPacket *packet, int queue)
   char *buffer, *tbuf = NULL, *toff = NULL;
   int nChunkSize;
   int tlen;
+  
+    // @remark debug info by http://github.com/ossrs/srs
+    if (packet->m_packetType == 8 || packet->m_packetType == 9) {
+        _srs_state = 2;
+    }
+    
 
   if (packet->m_nChannel >= r->m_channelsAllocatedOut)
     {
@@ -4274,6 +4294,9 @@ void
 RTMP_Close(RTMP *r)
 {
   CloseInternal(r, 0);
+
+  // @remark debug info by http://github.com/ossrs/srs
+  _srs_state = 3;
 }
 
 static void
