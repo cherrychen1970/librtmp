@@ -326,7 +326,7 @@ RTMP_Free(RTMP *r)
 }
 
 // @remark debug info by http://github.com/ossrs/srs
-int _srs_state = -1;
+int _srs_state = 0;
 
 void
 RTMP_Init(RTMP *r)
@@ -350,7 +350,7 @@ RTMP_Init(RTMP *r)
   r->Link.swfAge = 30;
 
   // @remark debug info by http://github.com/ossrs/srs
-  _srs_state = 0;
+  _srs_state = 1;
 }
 
 void
@@ -960,7 +960,7 @@ RTMP_Connect0(RTMP *r, struct sockaddr * service)
   setsockopt(r->m_sb.sb_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &on, sizeof(on));
 
     // @remark debug info by http://github.com/ossrs/srs
-    _srs_state = 1;
+    _srs_state = 2;
 
   return TRUE;
 }
@@ -3894,7 +3894,7 @@ RTMP_ReadPacket(RTMP *r, RTMPPacket *packet)
 
     // @remark debug info by http://github.com/ossrs/srs
     if (packet->m_packetType == 8 || packet->m_packetType == 9) {
-        _srs_state = 2;
+        _srs_state = 3;
     }
 
   return TRUE;
@@ -4068,7 +4068,7 @@ RTMP_SendPacket(RTMP *r, RTMPPacket *packet, int queue)
   
     // @remark debug info by http://github.com/ossrs/srs
     if (packet->m_packetType == 8 || packet->m_packetType == 9) {
-        _srs_state = 2;
+        _srs_state = 3;
     }
     
 
@@ -4296,7 +4296,7 @@ RTMP_Close(RTMP *r)
   CloseInternal(r, 0);
 
   // @remark debug info by http://github.com/ossrs/srs
-  _srs_state = 3;
+  _srs_state = 4;
 }
 
 static void
