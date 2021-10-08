@@ -15,7 +15,7 @@ CC=$(CROSS_COMPILE)gcc
 LD=$(CROSS_COMPILE)ld
 AR=$(CROSS_COMPILE)ar
 
-SYS=posix
+SYS=mingw
 CRYPTO=OPENSSL
 #CRYPTO=GNUTLS
 DEF_POLARSSL=-DUSE_POLARSSL
@@ -93,7 +93,7 @@ librtmp$(SO_EXT): $(OBJS)
 	ln -sf $@ librtmp.$(SOX)
 
 log.o: log.c log.h Makefile
-rtmp.o: rtmp.c rtmp.h rtmp_sys.h handshake.h dh.h log.h amf.h Makefile
+rtmp.o: rtmp.c rtmp.h rtmp_sys.h dh.h log.h amf.h Makefile
 amf.o: amf.c amf.h bytes.h log.h Makefile
 hashswf.o: hashswf.c http.h rtmp.h rtmp_sys.h Makefile
 parseurl.o: parseurl.c rtmp.h rtmp_sys.h log.h Makefile

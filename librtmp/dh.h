@@ -194,7 +194,7 @@ typedef BIGNUM * MP_t;
 
 /* RFC 2631, Section 2.1.5, http://www.ietf.org/rfc/rfc2631.txt */
 static int
-isValidPublicKey(MP_t y, MP_t p, MP_t q)
+isValidPublicKey(const MP_t y, const MP_t p, const MP_t q)
 {
   int ret = TRUE;
   MP_t bn;

@@ -69,9 +69,10 @@ typedef struct arcfour_ctx*	RC4_handle;
 #if OPENSSL_VERSION_NUMBER < 0x0090800 || !defined(SHA256_DIGEST_LENGTH)
 #error Your OpenSSL is too old, need 0.9.8 or newer with SHA256
 #endif
-#define HMAC_setup(ctx, key, len)	HMAC_CTX_init(&ctx); HMAC_Init_ex(&ctx, key, len, EVP_sha256(), 0)
-#define HMAC_crunch(ctx, buf, len)	HMAC_Update(&ctx, buf, len)
-#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(&ctx, dig, &dlen); HMAC_CTX_cleanup(&ctx)
+#define HMAC_setup(ctx, key, len)	HMAC_Init_ex(ctx, (unsigned char *)key, len, EVP_sha256(), 0)
+#define HMAC_crunch(ctx, buf, len)	HMAC_Update(ctx, (unsigned char *)buf, len)
+#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(ctx, (unsigned char *)dig, &dlen);
+#define HMAC_close(ctx)	HMAC_CTX_free(ctx)
 
 typedef RC4_KEY *	RC4_handle;
 #define RC4_alloc(h)	*h = malloc(sizeof(RC4_KEY))
@@ -83,7 +84,7 @@ typedef RC4_KEY *	RC4_handle;
 
 #define FP10
 
-#include "dh.h"
+//#include "dh.h"
 
 static const uint8_t GenuineFMSKey[] = {
   0x47, 0x65, 0x6e, 0x75, 0x69, 0x6e, 0x65, 0x20, 0x41, 0x64, 0x6f, 0x62,
@@ -117,7 +118,8 @@ static void InitRC4Encryption
 {
   uint8_t digest[SHA256_DIGEST_LENGTH];
   unsigned int digestLen = 0;
-  HMAC_CTX ctx;
+
+  HMAC_CTX *ctx= HMAC_CTX_new();
 
   RC4_alloc(rc4keyIn);
   RC4_alloc(rc4keyOut);
@@ -139,6 +141,7 @@ static void InitRC4Encryption
   RTMP_LogHex(RTMP_LOGDEBUG, digest, 16);
 
   RC4_setkey(*rc4keyIn, 16, digest);
+  HMAC_close(ctx);
 }
 
 typedef unsigned int (getoff)(uint8_t *buf, unsigned int len);
@@ -266,11 +269,13 @@ HMACsha256(const uint8_t *message, size_t messageLen, const uint8_t *key,
 	   size_t keylen, uint8_t *digest)
 {
   unsigned int digestLen;
-  HMAC_CTX ctx;
+  //HMAC_CTX ctx;
+  HMAC_CTX *ctx = HMAC_CTX_new();
 
   HMAC_setup(ctx, key, keylen);
   HMAC_crunch(ctx, message, messageLen);
   HMAC_finish(ctx, digest, digestLen);
+  HMAC_CTX_free(ctx);
 
   assert(digestLen == 32);
 }
