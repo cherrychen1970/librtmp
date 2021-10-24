@@ -1,12 +1,15 @@
 VERSION=v2.4
 
-prefix=/usr/local
+#prefix=/usr/local
+#CC=$(CROSS_COMPILE)clang
+#LD=$(CROSS_COMPILE)ld
 
-CC=$(CROSS_COMPILE)gcc
-LD=$(CROSS_COMPILE)ld
-
-SYS=posix
+#SYS=posix
+#SYS=darwin
 #SYS=mingw
+DESTDIR=$(LIBS_ROOT)/rtmp #install path
+INC=-I$(LIBS_ROOT)/ssl/1.0.2/include
+LIBINC=-L$(LIBS_ROOT)/ssl/1.0.2/lib
 
 CRYPTO=OPENSSL
 #CRYPTO=POLARSSL
@@ -22,7 +25,7 @@ CRYPTO_DEF=$(DEF_$(CRYPTO))
 DEF=-DRTMPDUMP_VERSION=\"$(VERSION)\" $(CRYPTO_DEF) $(XDEF)
 OPT=-O2
 CFLAGS=-Wall $(XCFLAGS) $(INC) $(DEF) $(OPT)
-LDFLAGS=-Wall $(XLDFLAGS)
+LDFLAGS=-Wall $(XLDFLAGS) $(LIBINC)
 
 bindir=$(prefix)/bin
 sbindir=$(prefix)/sbin
@@ -38,7 +41,8 @@ LIBS_mingw=-lws2_32 -lwinmm -lgdi32
 LIB_RTMP=-Llibrtmp -lrtmp
 LIBS=$(LIB_RTMP) $(CRYPTO_LIB) $(LIBS_$(SYS)) $(XLIBS)
 
-THREADLIB_posix=-lpthread
+# for android
+#THREADLIB_posix=-lpthread
 THREADLIB_darwin=-lpthread
 THREADLIB_mingw=
 THREADLIB=$(THREADLIB_$(SYS))
@@ -64,6 +68,9 @@ install:	$(PROGS)
 	cp rtmpgw$(EXT) rtmpsrv$(EXT) rtmpsuck$(EXT) $(SBINDIR)
 	cp rtmpdump.1 $(MANDIR)/man1
 	cp rtmpgw.8 $(MANDIR)/man8
+	@cd librtmp; $(MAKE) install
+
+install_lib: $(LIBRTMP)
 	@cd librtmp; $(MAKE) install
 
 clean:
