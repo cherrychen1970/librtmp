@@ -1,6 +1,9 @@
 VERSION=v2.4
 
-prefix=/usr/local
+#prefix=/usr/local
+DESTDIR=$(LIBS_ROOT)/rtmp #install path
+INC=-I$(LIBS_ROOT)/ssl/1.0.2/include
+LIBINC=-L$(LIBS_ROOT)/ssl/1.0.2/lib
 
 incdir=$(prefix)/include/librtmp
 bindir=$(prefix)/bin
@@ -11,11 +14,13 @@ INCDIR=$(DESTDIR)$(incdir)
 LIBDIR=$(DESTDIR)$(libdir)
 MANDIR=$(DESTDIR)$(mandir)
 
-CC=$(CROSS_COMPILE)gcc
-LD=$(CROSS_COMPILE)ld
-AR=$(CROSS_COMPILE)ar
+# will be provided from outside
+#CC=$(CROSS_COMPILE)gcc
+#LD=$(CROSS_COMPILE)ld
+#AR=$(CROSS_COMPILE)ar
+#SYS=posix
 
-SYS=posix
+
 CRYPTO=OPENSSL
 #CRYPTO=GNUTLS
 DEF_POLARSSL=-DUSE_POLARSSL
@@ -75,7 +80,7 @@ SO_INST=$(SOINST_$(SHARED))
 DEF=-DRTMPDUMP_VERSION=\"$(VERSION)\" $(CRYPTO_DEF) $(XDEF)
 OPT=-O2
 CFLAGS=-Wall $(XCFLAGS) $(INC) $(DEF) $(OPT) $(SO_DEF)
-LDFLAGS=$(XLDFLAGS)
+LDFLAGS=$(XLDFLAGS) $(LIBINC)
 
 
 OBJS=rtmp.o log.o amf.o hashswf.o parseurl.o
