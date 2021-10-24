@@ -7,7 +7,7 @@ VERSION=v2.4
 #SYS=posix
 #SYS=darwin
 #SYS=mingw
-DESTDIR=$(LIBS_ROOT)/rtmp #install path
+DESTDIR=$(LIBS_ROOT)/rtmp
 INC=-I$(LIBS_ROOT)/ssl/1.0.2/include
 LIBINC=-L$(LIBS_ROOT)/ssl/1.0.2/lib
 

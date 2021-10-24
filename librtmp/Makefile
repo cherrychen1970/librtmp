@@ -1,7 +1,7 @@
 VERSION=v2.4
 
 #prefix=/usr/local
-DESTDIR=$(LIBS_ROOT)/rtmp #install path
+DESTDIR=$(LIBS_ROOT)/rtmp
 INC=-I$(LIBS_ROOT)/ssl/1.0.2/include
 LIBINC=-L$(LIBS_ROOT)/ssl/1.0.2/lib
 
@@ -113,11 +113,11 @@ librtmp.pc: librtmp.pc.in Makefile
 install:	install_base $(SO_INST)
 
 install_base:	librtmp.a librtmp.pc
-	-mkdir -p $(INCDIR) $(LIBDIR)/pkgconfig $(MANDIR)/man3
+	-mkdir -p $(INCDIR) $(LIBDIR)/pkgconfig
 	cp amf.h http.h log.h rtmp.h $(INCDIR)
 	cp librtmp.a $(LIBDIR)
 	cp librtmp.pc $(LIBDIR)/pkgconfig
-	cp librtmp.3 $(MANDIR)/man3
+#cp librtmp.3 $(MANDIR)/man3
 
 install_so:	librtmp$(SO_EXT)
 	-mkdir -p $(SODIR)
