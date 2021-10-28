@@ -8,3 +8,4 @@ rtmpgw
 rtmpsrv
 rtmpsuck
 librtmp/librtmp.pc
+.DS_Store
